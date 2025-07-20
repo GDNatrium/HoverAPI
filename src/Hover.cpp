@@ -65,9 +65,24 @@ void Hover::update(float) {
             size.height + padding * 2
         );
 
-        #ifdef GEODE_IS_WINDOWS
-        if (m_debugDrawEnabled) m_drawNode->drawRect(rect, { 0, 0, 0, 0 }, 0.4, m_debugDrawColor);
-        #endif
+        if (m_debugDrawEnabled) {
+            float minX = worldPos.x - size.width * anchor.x - padding + offset.x;
+            float minY = worldPos.y - size.height * anchor.y - padding + offset.y;
+            float maxX = minX + size.width + padding * 2;
+            float maxY = minY + size.height + padding * 2;
+
+            std::array<cocos2d::CCPoint, 4> points = {
+                cocos2d::CCPoint(minX, minY),
+                cocos2d::CCPoint(maxX, minY),
+                cocos2d::CCPoint(maxX, maxY),
+                cocos2d::CCPoint(minX, maxY)
+            };
+
+            m_drawNode->drawPolygon(points.data(), points.size(), { 0, 0, 0, 0 }, 0.4, m_debugDrawColor);
+
+            // Cant use because of iOS and MacOS failing?
+            // m_drawNode->drawRect(rect, { 0, 0, 0, 0 }, 0.4, m_debugDrawColor);
+        }
 
         bool isHovering = rect.containsPoint(mouse);
         bool wasHovering = m_hovered.count(node) > 0;

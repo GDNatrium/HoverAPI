@@ -65,7 +65,9 @@ void Hover::update(float) {
             size.height + padding * 2
         );
 
+        #ifdef GEODE_IS_WINDOWS
         if (m_debugDrawEnabled) m_drawNode->drawRect(rect, { 0, 0, 0, 0 }, 0.4, m_debugDrawColor);
+        #endif
 
         bool isHovering = rect.containsPoint(mouse);
         bool wasHovering = m_hovered.count(node) > 0;
